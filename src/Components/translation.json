@@ -1,0 +1,10 @@
+ 
+    {
+        "rice-bag-name":"Rice Bag Name",
+        "rice-quantity" : "Rice Quantity",
+        "rice-bag-code":"Rice Bag Code",
+        "price-per-kg":"Price Per Kg",
+        "select":"Select",
+        "save":"Save",
+        "cancel":"Cancel"
+    }
