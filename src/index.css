@@ -98,3 +98,156 @@ nav a.active {
 .col-span{
   padding: 10px;
 }
+.rice-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.rice-table th,
+.rice-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;;
+}
+
+.rice-table th {
+  background-color: #007bff;
+  color: white;
+}
+
+.rice-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.rice-table tbody tr:hover {
+  background-color: #e2e2e2;
+}
+
+.rice-table td button {
+  padding: 8px 12px;
+  border: none;
+  background-color: transparent;
+  color: #007bff;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.rice-table td button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.rice-table td button:active {
+  transform: translateY(1px);
+}
+
+/* Table Container */
+.rice-table-container {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Table itself */
+.rice-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+}
+
+/* Table Header */
+.rice-table th {
+  padding: 15px;
+  font-size: 16px;
+  text-transform: uppercase;
+  color: #ffffff;
+  background-color: #007bff;
+}
+
+/* Table Body */
+.rice-table td {
+  padding: 12px 15px;
+  font-size: 14px;
+  color: #333333;
+  border-bottom: 1px solid #dddddd;
+}
+
+/* Alternating row colors */
+.rice-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Hover effect */
+.rice-table tbody tr:hover {
+  background-color: #f2f2f2;
+}
+
+/* Update and Delete buttons */
+.rice-table button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, transform 0.1s;
+}
+
+.rice-table button.update-btn {
+  background-color: #28a745;
+  color: #ffffff;
+}
+
+.rice-table button.delete-btn {
+  background-color: #dc3545;
+  color: #ffffff;
+}
+
+/* Button hover effect */
+.rice-table button:hover {
+  transform: translateY(-1px);
+}
+
+.rice-table button:hover.update-btn {
+  background-color: #218838;
+}
+
+.rice-table button:hover.delete-btn {
+  background-color: #c82333;
+}
+
+/* Custom TD and TR Styles */
+.rice-table td {
+  border: 1px solid #dddddd;
+}
+
+.rice-table tr {
+  background-color: #ffffff;
+  transition: background-color 0.3s;
+}
+
+.rice-table tr:hover {
+  background-color: #f2f2f2;
+}
+
+/* Text Styling */
+.rice-table th,
+.rice-table td {
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Text Alignments */
+.rice-table th,
+.rice-table td {
+  text-align: center;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+/* Text Color */
+.rice-table th {
+  color: #ffffff;
+}
+
+.rice-table td {
+  color: #333333;
+}

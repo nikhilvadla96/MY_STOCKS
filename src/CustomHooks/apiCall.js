@@ -6,6 +6,7 @@ const apiCall = (props) => {
 
     const Full_API =`http://localhost:8080/${url}`;
 
+    console.log(Full_API);
     if(method === 'get'){
         return axios.get(Full_API);
     }else if(method === 'post'){
