@@ -101,7 +101,6 @@ nav a.active {
 .rice-table {
   width: 100%;
   border-collapse: collapse;
-  text-align: center;
 }
 
 .rice-table th,
@@ -250,4 +249,16 @@ nav a.active {
 
 .rice-table td {
   color: #333333;
+}
+
+.text-center{
+  text-align: center;
+}
+button.update-btn {
+  background-color: #28a745;
+  color: #ffffff;
+}
+button.delete-btn {
+  background-color: #dc3545;
+  color: #ffffff;
 }
