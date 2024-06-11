@@ -3,6 +3,7 @@ import apiCall from "../CustomHooks/apiCall";
 import {Url , Method} from "../Constants/ApiConstants"
 import t from "./translation.json";
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const AddNewBag = () => {
 
@@ -20,27 +21,44 @@ export const AddNewBag = () => {
       
      },[])
 
-console.log(riceBagsList);
+
     const  handleSave = async(event) =>{
+      let response = '';
         try {
-          const response = await apiCall({ url:Url.saveRiceBag , method: Method.POST , state : state});
-           await toast(response.data.returnMsg);
+          if(state.riceBagId){
+            response = await apiCall({ url:Url.updateRiceBag , method: Method.POST , state : state});
+        }else{
+          response = await apiCall({ url:Url.saveRiceBag , method: Method.POST , state : state});
+        }
+          
+       await toast.success(response.data.returnMsg);
+        window.location.reload();
         } catch (error) {
           
         }
       }
 
       const updateBag = async (riceBagId) =>{
-        alert(riceBagId)
         try {
           const response = await apiCall({ url:Url.getRiceBagById+riceBagId , method: Method.GET , state : state});
           
-          console.log(response.data);
+          setState(response.data.results)
         } catch (error) {
           
         }
       }
 
+      const confirmDelete =async(riceBagId)=>{
+        try {
+          const response = await apiCall({ url:Url.deleteRiceBag+riceBagId , method: Method.POST , state :{}});
+          await toast.success(response.data.returnMsg);
+          setTimeout(() => {
+            window.location.reload(); // Reload the page after a delay
+          }, 500);
+        } catch (error) {
+          
+        }
+      }
   return (
     
     <div>
@@ -49,19 +67,21 @@ console.log(riceBagsList);
           <div className="form-page">
             <div className="col-span">
               <label>{t["rice-bag-name"]} : </label>
-              <input onChange={(e) => setState({ ...state, riceBagName: e.target.value })}></input>
+              <input value={state.riceBagName} onChange={(e) => setState({ ...state, riceBagName: e.target.value })}></input>
             </div>
             <div className="col-span">
               <label>{t["rice-bag-code"]} : </label>
-              <input onChange={(e) => setState({ ...state, riceBagCode: e.target.value })}></input>
+              <input value={state.riceBagCode} onChange={(e) => setState({ ...state, riceBagCode: e.target.value })}></input>
             </div>
             <div className="col-span">
               <label>{t["price-per-kg"]} : </label>
-              <input type='number' onChange={(e) => setState({ ...state, pricePerKg: e.target.value })}></input>
+              <input type='number' value={state.pricePerKg} onChange={(e) => setState({ ...state, pricePerKg: e.target.value })}></input>
             </div>
             <div className="col-span">
-              <input type="submit" value={t["save"]}  onClick={handleSave} />&nbsp;
-              <input type="reset" value={t["cancel"]} />
+              <button className="update-btn" onClick={handleSave}>{state && state.riceBagId ? t['update'] : t["save"]}</button>&nbsp;
+              
+              <button className="delete-btn" onClick={handleSave}>{t["cancel"]}</button>&nbsp;
+             
             </div>
           </div>
         </div>
@@ -70,15 +90,15 @@ console.log(riceBagsList);
       <table className="rice-table">
       <thead>
         <tr>
-          <th>Rice Code</th>
-          <th>Rice Name</th>
-          <th>Rice Price</th>
-          <th>Update</th>
-          <th>Delete</th>
+          <th>{t['rice-bag-code']}</th>
+          <th>{t['rice-bag-name']}</th>
+          <th>{t['price-per-kg']}</th>
+          <th>{t['update']}</th>
+          <th>{t['delete']}</th>
         </tr>
       </thead>
       <tbody>
-        {riceBagsList && riceBagsList.map((eachList, index) => (
+        {riceBagsList && riceBagsList.length >0 && riceBagsList.map((eachList, index) => (
           <tr key={index}>
             <td>{eachList.riceBagCode}</td>
             <td>{eachList.riceBagName}</td>
@@ -87,12 +107,16 @@ console.log(riceBagsList);
               <button className="update-btn" onClick={()=>{updateBag(eachList.riceBagId)}}>Update</button>
             </td>
             <td>
-              <button className="delete-btn">Delete</button>
+              <button className="delete-btn" onClick={()=>{confirmDelete(eachList.riceBagId)}}>Delete</button>
             </td>
           </tr>
-        ))}
+        ))
+      }
       </tbody>
     </table>
+    {
+     riceBagsList && riceBagsList.length ===0 && <div className='text-center'>No Records Found</div>
+    }
 
 
     </div>
