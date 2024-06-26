@@ -1,10 +1,26 @@
  
     {
         "rice-bag-name":"Rice Bag Name",
-        "rice-quantity" : "Rice Quantity",
+        "rice-quantity" : "Rice Quantity (kg)",
         "rice-bag-code":"Rice Bag Code",
         "price-per-kg":"Price Per Kg",
+        "ourPrice-per-kg":"OurPrice Per Kg",
         "select":"Select",
         "save":"Save",
-        "cancel":"Cancel"
+        "cancel":"Cancel",
+        "update":"Update",
+        "sold":"Sold",
+        "clear":"Clear",
+        "from-date":"From-Date",
+        "to-date":"To-Date",
+        "search":"Search",
+        "date":"Date",
+        "total-price":"Total Price ⟨₹)",
+        "our-total-price":"Our Total Price ⟨₹⟩",
+        "tot-amt-profit":"Total Amount profit ⟨₹⟩",
+        "delete":"Delete",
+        "available-stock":"Available Stock (kg)",
+        "sl-No":"Sl-No",
+        "tot-price-avbStock":"Total price of Available Stock ⟨₹⟩",
+        "tot-price-ofOur-avbStock":"Total price of Our Available Stock ⟨₹⟩"
     }

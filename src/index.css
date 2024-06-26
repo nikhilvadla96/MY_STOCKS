@@ -159,7 +159,7 @@ nav a.active {
 .rice-table th {
   padding: 15px;
   font-size: 16px;
-  text-transform: uppercase;
+  /*text-transform: uppercase;*/
   color: #ffffff;
   background-color: #007bff;
 }
@@ -261,4 +261,9 @@ button.update-btn {
 button.delete-btn {
   background-color: #dc3545;
   color: #ffffff;
+}
+
+.pdfDiv{
+  text-align: right;
+  margin: 10px;
 }
