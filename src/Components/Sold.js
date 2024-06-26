@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import t from "./translation.json";
 import apiCall from '../CustomHooks/apiCall';
 import { Method, Url } from '../Constants/ApiConstants';
+import { color } from 'chart.js/helpers';
 
 export const Sold = () => {
 
@@ -21,6 +22,7 @@ export const Sold = () => {
         }
 
         fetchAllRiceBagNames();
+        handleSerach();
   },[])
 
   const handleSerach = async()=>{
@@ -38,7 +40,6 @@ export const Sold = () => {
     return parseFloat(amt1 *amt2).toFixed(2) 
   }
 
-  console.log(grandTotal);
   return (
     <div>
         <div className="row">
@@ -81,43 +82,49 @@ export const Sold = () => {
       <table className="rice-table">
       <thead>
         <tr>
+          <th>{t['sl-No']}</th>
           <th>{t['rice-bag-name']}</th>
           <th>{t['date']}</th>
           <th>{t['rice-quantity']}</th>
           <th>{t['total-price']}</th>
-         
+          <th>{t['our-total-price']}</th>
+          <th>{t['tot-amt-profit']}</th>
         </tr>
       </thead>
       <tbody>
         {riceBagsList && riceBagsList.length >0 && riceBagsList.map((eachList, index) => (
           <tr key={index}>
+             <td>{index+1}</td>
             <td>{eachList.riceBags.riceBagName}</td>
-            <td>{eachList.date}</td>
-            <td>{eachList.riceSoldQuantity}</td>
-            <td>{parseAmount(eachList.riceSoldQuantity, eachList.riceBags.pricePerKg)}</td>
+            <td>{eachList.date|| '--'}</td>
+            <td>{eachList.riceSoldQuantity  || eachList.grandTotalQuantity}</td>
+            <td>{eachList.totalSoldPrice || eachList.grandTotalAmount}</td>
+            <td>{eachList.ourTotalSoldPrice || eachList.ourGrandTotalAmt}</td>
+            <td>{eachList.amtProfit ||  eachList.totalAmtProfit}</td>
           </tr>
         ))
       }
-      </tbody>
-    </table>
-    {
+      {
       grandTotal && grandTotal.grandTotalAmount &&
       (
-        <>
-            <tr style={{textAlign:'left'}}>
-              <strong>  Grand Total Amount  : </strong>
-              <line>{parseAmount(grandTotal.grandTotalAmount,1)}</line>
-         </tr>
-          
-          <tr style={{textAlign:'left'}}>
-          <strong>  Grand Total Quantity  : </strong>
-          <line>{ parseAmount(grandTotal.grandTotalQuantity,1)}</line>
-     </tr>
-        </>
+        
+     <tr>
+             <td>{}</td>
+            <td>{}</td>
+            <td>{}</td>
+            <td style={{color:'green'}}>{grandTotal.grandTotalQuantity}</td>
+            <td style={{color:'green'}}>{grandTotal.grandTotalAmount}</td>
+            <td style={{color:'green'}}>{grandTotal.ourGrandTotalAmt}</td>
+            <td style={{color:'green'}}>{grandTotal.totalAmtProfit}</td>
+          </tr>
+      
       )
     }
+      </tbody>
+    </table>
+
     {
-     riceBagsList && riceBagsList.length ===0 && <div className='text-center'>No Records Found</div>
+     (riceBagsList && riceBagsList.length ===0  || riceBagsList == null )&& <div className='text-center'>No Records Found</div>
     }
     </div>
   )

@@ -8,7 +8,10 @@ export const Url = {
   deleteRiceBag :'api/ricebag/deleteRiceBag/',
   fetchAllRiceBagNames : 'api/ricebag/fetchAllRiceBagNames',
   saveBagsSoldOut :"api/sale/saveBagsSoldOut",
-  getRiceBagsSoldOut :"api/sale/getRiceBagsSoldOut/"
+  getRiceBagsSoldOut :"api/sale/getRiceBagsSoldOut/",
+  getStockReport : "api/ricebag/getStockReport",
+  //downloadPDF : "api/pdf/download-pdf"
+  downloadPDF :"api/pdf/api/download-pdf"
 }
 
 export const Method = {
