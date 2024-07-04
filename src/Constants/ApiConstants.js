@@ -11,7 +11,9 @@ export const Url = {
   getRiceBagsSoldOut :"api/sale/getRiceBagsSoldOut/",
   getStockReport : "api/ricebag/getStockReport",
   //downloadPDF : "api/pdf/download-pdf"
-  downloadPDF :"api/pdf/api/download-pdf"
+  downloadPDF :"api/pdf/api/download-pdf",
+  getTotalRiceBagsPricePerDay :"api/sale/getTotalRiceBagsPricePerDay",
+  getEachRiceBagsDetails : "api/sale/getEachRiceBagsDetails"
 }
 
 export const Method = {

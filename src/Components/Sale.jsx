@@ -77,7 +77,7 @@ const isCheckBox =() =>{
   return (
     
     <div>
-      <div className="row">
+      <div className="">
         <div className="sale">
           <div className="form-page">
             <div className="col-span">

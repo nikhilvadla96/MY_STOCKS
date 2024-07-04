@@ -9,6 +9,7 @@ import BarChart from '../Charts/BarChart'
 import apiCall from '../CustomHooks/apiCall'
 import { Method, Url } from '../Constants/ApiConstants'
 import PieChartComponent from '../Charts/PieChartComponent'
+import Home from './Home'
 
 const DashBoard = () => {
 
@@ -49,20 +50,12 @@ const fetchData = async () => {
     <div className="row">
         <NavBar/>
         <Routes>
+            <Route path='/' element={<Home/>}/>
             <Route path='/sale' element={<Sale/>}/>
             <Route path='/sold' element={<Sold/>}/>
             <Route path='/stock' element={<Stock/>}/>
             <Route path='/addBag' element={<AddNewBag/>}/>
           </Routes>
-         <div className='row'>
-        <div className='col-md-6'>
-          <BarChart />
-        </div>
-        <div className='col-md-6'>
-          <PieChartComponent />
-        </div>
-      </div>
-          
     </div>
   )
 }

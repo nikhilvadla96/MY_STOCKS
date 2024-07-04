@@ -1,28 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CanvasJSReact from '@canvasjs/react-charts';
+import apiCall from '../CustomHooks/apiCall';
+import { Method, Url } from '../Constants/ApiConstants';
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const BarChart = () => {
+  const [totalPrice, setTotalPrice] = useState([]);
 
+  useEffect(() => {
+    const getTotalRiceBagsPricePerDay = async () => {
+      try {
+        const response = await apiCall({ url: Url.getTotalRiceBagsPricePerDay, method: Method.GET });
+        if (response && response.data && response.data.resultList) {
+          const resultList = response.data.resultList;
+          setTotalPrice(resultList);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    getTotalRiceBagsPricePerDay();
+  }, []);
 
   const options = {
     title: {
-      text: "Basic Column Chart"
+      text: 'Day-Wise Sale',
     },
     data: [
       {
-        // Change type to "doughnut", "line", "splineArea", etc.
-        type: "column",
-        dataPoints: [
-          { label: "Apple",  y: 10  },
-          { label: "Orange", y: 15  },
-          { label: "Banana", y: 25  },
-          { label: "Mango",  y: 30  },
-          { label: "Grape",  y: 28  }
-        ]
-      }
-    ]
+        type: 'column',
+        dataPoints: totalPrice.map(eachMap => ({
+          label: eachMap.date,
+          y: eachMap.grandTotalAmount,
+          indexLabel: `₹${eachMap.grandTotalAmount.toFixed(2)}`, // Display grandTotalAmount on top of each bar
+        })),
+      },
+    ],
   };
 
   return (
@@ -30,6 +45,6 @@ const BarChart = () => {
       <CanvasJSChart options={options} />
     </div>
   );
-}
+};
 
 export default BarChart;
