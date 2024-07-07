@@ -22,5 +22,11 @@
         "available-stock":"Available Stock (kg)",
         "sl-No":"Sl-No",
         "tot-price-avbStock":"Total price of Available Stock ⟨₹⟩",
-        "tot-price-ofOur-avbStock":"Total price of Our Available Stock ⟨₹⟩"
+        "tot-price-ofOur-avbStock":"Total price of Our Available Stock ⟨₹⟩",
+        "item-sale-report":"ItemWise Sale Report",
+        "stock-report":"Stock Report",
+        "add-new-bag":"Add New Bag",
+        "sale":"Sale",
+        "sale-report":"Sale Report",
+        "loose-rice" :"Loose Rice"
     }
