@@ -5,6 +5,7 @@ import apiCall from "../CustomHooks/apiCall";
 import {Url , Method} from "../Constants/ApiConstants"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Select from "react-select";
 
 const Sale = () => {
 
@@ -74,51 +75,56 @@ const isCheckBox =() =>{
   })
 }
 
+const handleChange = (selectedOption) => {
+  setState({ ...state, riceBagName: selectedOption.value }); // Update riceBagName in state
+};
+
   return (
     
     <div>
       <div className="">
+      <header>
+        <h1>{t['sale']}</h1>
+    </header>
         <div className="sale">
           <div className="form-page">
-            <div className="col-span">
-              <label>{t["rice-bag-name"]} : </label>
-              <select 
-                className="select-field" 
-                onChange={(e) => setState({ ...state, riceBagName: e.target.value })}
-                value={state.riceBagName} // Add this line to control the select value
-              >
-                <option value="">{t['select']}</option>
-                {
-                  bagsNames && bagsNames.map((eachbag,index) => (
-                    <option key={index} value={eachbag.value}>{eachbag.label}</option>
-                  ))
-                }
-              </select>
+            <div className="form-group">
+              <label className="col-md-6 label">{t["rice-bag-name"]} : </label>
+              <Select
+                  className="select-field"
+                  onChange={handleChange}
+                  value={
+                    bagsNames &&
+                    bagsNames.find(
+                      (option) => option.value === state.riceBagName || ""
+                    )
+                  } // Control the select value using state.riceBagName
+                  options={bagsNames}
+                />
             </div>
-            <div className="col-span">
-              <label>{t["rice-quantity"]} : </label>
+            <div className="form-group">
+              <label className="col-md-6 label">{t["rice-quantity"]} : </label>
               {
                 isChecked ?
                 <input type="number" onChange={(e) => setState({ ...state, riceQuantity: e.target.value })}></input>
                 :
-                <select 
-                className="select-field" 
-                onChange={(e) => setState({ ...state, riceQuantity: e.target.value })}
-                value={state.riceQuantity} // Add this line to control the select value
-              >
-                <option value="">{t['select']}</option>
-                {
-                  riceQuantity && riceQuantity.map((eachbag,index) => (
-                    <option key={index} value={eachbag.value}>{eachbag.label}</option>
-                  ))
-                }
-              </select>
+              <Select 
+              className="select-field"
+              onChange={(selectedOption) =>{setState({ ...state, riceQuantity: selectedOption.value })}}
+              value={
+                riceQuantity &&
+                riceQuantity.find(
+                  (option) => option.value === state.riceQuantity || ""
+                )
+              } // Control the select value using state.riceBagName
+              options={riceQuantity}
+            />
               }
-              
+             
             </div>
-            <div className="col-span">
-              <label>{t["rice-quantity"]} : </label>
-              <input type="checkbox" onChange={isCheckBox}></input>
+            <div className="form-group">
+              <label className="col-md-6 label">{t["loose-rice"]} : </label>
+              <input   type="checkbox" onChange={isCheckBox}></input>
             </div>
             <div className="col-span">
             <button className="update-btn" onClick={handleSave}>{t["sold"]}</button>&nbsp;
