@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import apiCall from "../CustomHooks/apiCall";
 import { Url, Method } from "../Constants/ApiConstants";
 import t from "./translation.json";
@@ -9,10 +9,14 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import { MyContext } from "../MyContextProvider";
 
 export const AddNewBag = () => {
   const [state, setState] = useState({});
   const [riceBagsList, setRiceBagsList] = useState();
+
+  const [totalPrice, setTotalPrice] = useState([]);
+  const {isAuthenticated , token ,handleRedirect} = useContext(MyContext)
 
   useEffect(() => {
     const fetchRiceBags = async () => {
@@ -20,11 +24,12 @@ export const AddNewBag = () => {
         url: Url.getAllRiceBags,
         method: Method.GET,
         state: state,
-      });
+        token , token
+      },handleRedirect);
       setRiceBagsList(response.data.resultList);
     };
     fetchRiceBags();
-  }, []);
+  }, [token]);
 
   const handleSave = async (event) => {
     let response = "";
@@ -34,18 +39,40 @@ export const AddNewBag = () => {
           url: Url.updateRiceBag,
           method: Method.POST,
           state: state,
-        });
+          token: token
+        },handleRedirect);
       } else {
         response = await apiCall({
           url: Url.saveRiceBag,
           method: Method.POST,
           state: state,
-        });
+          token: token
+        },handleRedirect);
       }
-
+  
       await toast.success(response.data.returnMsg);
-      window.location.reload();
-    } catch (error) {}
+      
+      // Fetch updated list of rice bags
+      const updatedRiceBagsResponse = await apiCall({
+        url: Url.getAllRiceBags,
+        method: Method.GET,
+        state: state,
+        token: token
+      },handleRedirect);
+      setRiceBagsList(updatedRiceBagsResponse.data.resultList);
+      
+      // Clear the state after saving
+      clearData();
+      setState({})
+    } catch (error) {
+      // Handle error here
+      console.error("Error saving rice bag:", error);
+    }
+  };
+  
+
+  const clearData = () => {
+    setState({});
   };
 
   const updateBag = async (riceBagId) => {
@@ -54,11 +81,16 @@ export const AddNewBag = () => {
         url: Url.getRiceBagById + riceBagId,
         method: Method.GET,
         state: state,
-      });
-
+        token: token
+      },handleRedirect);
+  
       setState(response.data.results);
-    } catch (error) {}
+    } catch (error) {
+      // Handle error here
+      console.error("Error fetching rice bag:", error);
+    }
   };
+  
 
   const confirmDelete = async (riceBagId) => {
     try {
@@ -66,13 +98,25 @@ export const AddNewBag = () => {
         url: Url.deleteRiceBag + riceBagId,
         method: Method.POST,
         state: {},
-      });
+        token: token
+      },handleRedirect);
+      
       await toast.success(response.data.returnMsg);
-      setTimeout(() => {
-        window.location.reload(); // Reload the page after a delay
-      }, 500);
-    } catch (error) {}
+      
+      // Fetch updated list of rice bags
+      const updatedRiceBagsResponse = await apiCall({
+        url: Url.getAllRiceBags,
+        method: Method.GET,
+        state: state,
+        token: token
+      },handleRedirect);
+      setRiceBagsList(updatedRiceBagsResponse.data.resultList);
+    } catch (error) {
+      // Handle error here
+      console.error("Error deleting rice bag:", error);
+    }
   };
+  
 
   const downloadPDF = async () => {
 
@@ -103,51 +147,59 @@ export const AddNewBag = () => {
   return (
     <div>
       <div className="">
+      <header>
+        <h1>{t['add-new-bag']}</h1>
+    </header>
         <div className="sale">
           <div className="form-page">
-            <div className="col-span">
-              <label>{t["rice-bag-name"]} : </label>
+            <div className="form-group">
+              <label className="col-md-6 label">{t["rice-bag-name"]} : </label>
               <input
-                value={state.riceBagName}
+               className="select-field"
+               value={state.riceBagName || ""}
                 onChange={(e) =>
                   setState({ ...state, riceBagName: e.target.value })
                 }
               ></input>
             </div>
-            <div className="col-span">
-              <label>{t["rice-bag-code"]} : </label>
+            <div className="form-group">
+              <label className="col-md-6 label">{t["rice-bag-code"]} : </label>
               <input
-                value={state.riceBagCode}
+               className="select-field"
+                value={state.riceBagCode || ''}
                 onChange={(e) =>
                   setState({ ...state, riceBagCode: e.target.value })
                 }
               ></input>
             </div>
-            <div className="col-span">
-              <label>{t["ourPrice-per-kg"]} : </label>
+            <div className="form-group">
+              <label className="col-md-6 label">{t["ourPrice-per-kg"]} : </label>
               <input
+               className="select-field"
                 type="number"
-                value={state.ourPricePerKg}
+                value={state.ourPricePerKg || ''}
                 onChange={(e) =>
                   setState({ ...state, ourPricePerKg: e.target.value })
                 }
               ></input>
             </div>
-            <div className="col-span">
-              <label>{t["price-per-kg"]} : </label>
+            <div className="form-group">
+              <label className="col-md-6 label">{t["price-per-kg"]} : </label>
               <input
                 type="number"
-                value={state.pricePerKg}
+                 className="select-field"
+                value={state.pricePerKg || ''}
                 onChange={(e) =>
                   setState({ ...state, pricePerKg: e.target.value })
                 }
               ></input>
             </div>
-            <div className="col-span">
-              <label>{t["available-stock"]} : </label>
+            <div className="form-group">
+              <label className="col-md-6 label">{t["available-stock"]} : </label>
               <input
+               className="select-field"
                 type="number"
-                value={state.stockAvailable}
+                value={state.stockAvailable || ''}
                 onChange={(e) =>
                   setState({ ...state, stockAvailable: e.target.value })
                 }
@@ -158,7 +210,7 @@ export const AddNewBag = () => {
                 {state && state.riceBagId ? t["update"] : t["save"]}
               </button>
               &nbsp;
-              <button className="delete-btn" onClick={handleSave}>
+              <button className="delete-btn" onClick={clearData}>
                 {t["cancel"]}
               </button>
               &nbsp;

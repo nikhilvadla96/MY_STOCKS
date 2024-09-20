@@ -1,142 +1,162 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import t from "./translation.json";
-import axios from 'axios'
 import apiCall from "../CustomHooks/apiCall";
-import {Url , Method} from "../Constants/ApiConstants"
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Url, Method } from "../Constants/ApiConstants";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
+import { MyContext } from "../MyContextProvider";
 
 const Sale = () => {
+  const [state, setState] = useState({
+    riceQuantity: "",
+    riceBagName: "",
+  });
+  const [bagsNames, setBagsName] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
+  const { isAuthenticated, token, setIsAuthenticated ,handleRedirect } = useContext(MyContext);
 
-  const [state , setState] = useState({})
-  const [bagsNames , setBagsName] = useState();
-  const [isChecked , setIsChecked] = useState(false);
+  const riceQuantityOptions = [
+    { value: "5", label: "5 Kgs" },
+    { value: "10", label: "10 Kgs" },
+    { value: "15", label: "15 Kgs" },
+    { value: "20", label: "20 Kgs" },
+    { value: "25", label: "25 Kgs" },
+    { value: "26", label: "26 Kgs" },
+  ];
 
-  const riceQuantity =[
-    { value: '5' ,label : '5 Kgs'},
-    { value:'10' ,label :'10 Kgs'},
-    { value:'15' ,label : '15 Kgs'},
-    { value:'20' ,label : '20 Kgs'},
-    { value:'25' ,label : '25 Kgs'},
-    { value:'26' ,label : '26 Kgs'},
-  ]
-    
-  useEffect(()=>{
-        const fetchAllRiceBagNames =async ()=>{
-          const response = await apiCall({ url:Url.fetchAllRiceBagNames , method: Method.GET , state : state});
-          if(response && response.data && response.data.resultList){
-              const resultList = response.data.resultList;
-              setBagsName(resultList)
-          }
+  useEffect(() => {
+    const fetchAllRiceBagNames = async () => {
+      try {
+        const response = await apiCall({
+          url: Url.fetchAllRiceBagNames,
+          method: Method.GET,
+          state: state,
+          token: token,
+        },handleRedirect);
+        if (response && response.data && response.data.resultList) {
+          setBagsName(response.data.resultList);
         }
+      } catch (error) {
+        console.error("Error fetching rice bag names:", error);
+      }
+    };
 
-        fetchAllRiceBagNames();
-  },[])
-  
-  console.log(state);
+    fetchAllRiceBagNames();
+  }, [token]);
 
-
-  const fetchAllBags = async () => {
+  const handleSave = async () => {
     try {
-      const response = await apiCall({ url:Url.getAllRiceBags , method: Method.GET });
-     
-      
+      const response = await apiCall({
+        url: Url.saveBagsSoldOut,
+        method: Method.POST,
+        state: state,
+        token: token,
+      },handleRedirect);
+      await toast.success(response.data.returnMsg);
+
+      // Optionally fetch updated list or perform other state updates
+      clearData();
     } catch (error) {
-      
+      console.error("Error saving bags sold out:", error);
+      toast.error("Failed to save bags sold out");
     }
+  };
 
-  }
+  const clearData = () => {
+    setState({
+      riceQuantity: "",
+      riceBagName: "",
+    });
+    setIsChecked(false);
+  };
 
-const  handleSave = async() =>{
-  try {
-    const response = await apiCall({ url:Url.saveBagsSoldOut , method: Method.POST , state : state});
-    await toast.success(response.data.returnMsg);
-    setTimeout(() => {
-      window.location.reload(); // Reload the page after a delay
-    }, 500);
-    
-  } catch (error) {
-    
-  }
-}
+  const isCheckBox = () => {
+    setIsChecked(!isChecked);
+    setState((prevState) => ({
+      ...prevState,
+      riceQuantity: "",
+    }));
+  };
 
-const clearData =()=>{
-  setState({riceQuantity : '',
-    riceBagName:'',
-  })
-}
+  const handleChange = (selectedOption) => {
+    setState((prevState) => ({
+      ...prevState,
+      riceBagName: selectedOption ? selectedOption.value : "",
+    }));
+  };
 
-const isCheckBox =() =>{
-  setIsChecked(!isChecked)
-  setState({
-    ...state,
-    riceQuantity : ''
-  })
-}
-
-const handleChange = (selectedOption) => {
-  setState({ ...state, riceBagName: selectedOption.value }); // Update riceBagName in state
-};
+  const handleQuantityChange = (e) => {
+    setState((prevState) => ({
+      ...prevState,
+      riceQuantity: e.target.value,
+    }));
+  };
 
   return (
-    
     <div>
-      <div className="">
       <header>
-        <h1>{t['sale']}</h1>
-    </header>
-        <div className="sale">
-          <div className="form-page">
-            <div className="form-group">
-              <label className="col-md-6 label">{t["rice-bag-name"]} : </label>
-              <Select
-                  className="select-field"
-                  onChange={handleChange}
-                  value={
-                    bagsNames &&
-                    bagsNames.find(
-                      (option) => option.value === state.riceBagName || ""
-                    )
-                  } // Control the select value using state.riceBagName
-                  options={bagsNames}
-                />
-            </div>
-            <div className="form-group">
-              <label className="col-md-6 label">{t["rice-quantity"]} : </label>
-              {
-                isChecked ?
-                <input type="number" onChange={(e) => setState({ ...state, riceQuantity: e.target.value })}></input>
-                :
-              <Select 
+        <h1>{t["sale"]}</h1>
+      </header>
+      <div className="sale">
+        <div className="form-page">
+          <div className="form-group">
+            <label className="col-md-6 label">{t["rice-bag-name"]} :</label>
+            <Select
               className="select-field"
-              onChange={(selectedOption) =>{setState({ ...state, riceQuantity: selectedOption.value })}}
+              onChange={handleChange}
               value={
-                riceQuantity &&
-                riceQuantity.find(
-                  (option) => option.value === state.riceQuantity || ""
-                )
-              } // Control the select value using state.riceBagName
-              options={riceQuantity}
-            />
+                bagsNames.find((option) => option.value === state.riceBagName) ||
+                null
               }
-             
-            </div>
-            <div className="form-group">
-              <label className="col-md-6 label">{t["loose-rice"]} : </label>
-              <input   type="checkbox" onChange={isCheckBox}></input>
-            </div>
-            <div className="col-span">
-            <button className="update-btn" onClick={handleSave}>{t["sold"]}</button>&nbsp;
-              
-              <button className="delete-btn" onClick={clearData}>{t["clear"]}</button>&nbsp;
-            </div>
+              options={bagsNames}
+            />
+          </div>
+          <div className="form-group">
+            <label className="col-md-6 label">{t["rice-quantity"]} :</label>
+            {isChecked ? (
+              <input
+                type="number"
+                value={state.riceQuantity}
+                onChange={handleQuantityChange}
+              />
+            ) : (
+              <Select
+                className="select-field"
+                onChange={(selectedOption) => {
+                  setState((prevState) => ({
+                    ...prevState,
+                    riceQuantity: selectedOption ? selectedOption.value : "",
+                  }));
+                }}
+                value={
+                  riceQuantityOptions.find(
+                    (option) => option.value === state.riceQuantity
+                  ) || null
+                }
+                options={riceQuantityOptions}
+              />
+            )}
+          </div>
+          <div className="form-group">
+            <label className="col-md-6 label">{t["loose-rice"]} :</label>
+            <input type="checkbox" checked={isChecked} onChange={isCheckBox} />
+          </div>
+          <div className="col-span">
+            <button className="update-btn" onClick={handleSave}>
+              {t["sold"]}
+            </button>
+            &nbsp;
+            <button className="delete-btn" onClick={clearData}>
+              {t["clear"]}
+            </button>
+            &nbsp;
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
-  
 };
 
 export default Sale;

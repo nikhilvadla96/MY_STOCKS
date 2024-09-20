@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import CanvasJSReact from '@canvasjs/react-charts';
 import apiCall from '../CustomHooks/apiCall';
 import { Method, Url } from '../Constants/ApiConstants';
+import { MyContext } from '../MyContextProvider';
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const BarChart = () => {
   const [totalPrice, setTotalPrice] = useState([]);
+  const {token ,handleRedirect} = useContext(MyContext)
 
   useEffect(() => {
     const getTotalRiceBagsPricePerDay = async () => {
       try {
-        const response = await apiCall({ url: Url.getTotalRiceBagsPricePerDay, method: Method.GET });
+        const response = await apiCall({ url: Url.getTotalRiceBagsPricePerDay, method: Method.GET , token : token },handleRedirect);
         if (response && response.data && response.data.resultList) {
           const resultList = response.data.resultList;
           setTotalPrice(resultList);

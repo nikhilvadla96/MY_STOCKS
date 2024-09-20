@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import t from "./translation.json";
 import apiCall from "../CustomHooks/apiCall";
 import { Method, Url } from "../Constants/ApiConstants";
@@ -6,6 +6,8 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import Select from "react-select";
+import { MyContext } from "../MyContextProvider";
 
 const Stock = () => {
   const [state, setState] = useState({});
@@ -13,6 +15,7 @@ const Stock = () => {
   const [riceBagsList, setRiceBagsList] = useState();
   const [grandTotal, setGrandTotal] = useState({});
   const [formattedDate , setFormattedDate] = useState('')
+  const {isAuthenticated , token ,handleRedirect} = useContext(MyContext)
 
   useEffect(() => {
     const fetchAllRiceBagNames = async () => {
@@ -20,7 +23,8 @@ const Stock = () => {
         url: Url.fetchAllRiceBagNames,
         method: Method.GET,
         state: state,
-      });
+        token :token
+      },handleRedirect);
       if (response && response.data && response.data.resultList) {
         const resultList = response.data.resultList;
         setBagsName(resultList);
@@ -42,10 +46,10 @@ const Stock = () => {
       url: Url.getStockReport,
       method: Method.GET,
       state: state,
-    });
+      token :token
+    },handleRedirect);
     setRiceBagsList(response.data.resultList);
     setGrandTotal(response.data.results);
-    console.log(response);
   };
 
   const clearData = () => {
@@ -106,33 +110,39 @@ const Stock = () => {
     doc.save(`StocksReport(${formattedDate}).pdf`);
   };
 
+  const handleChange = (selectedOption) => {
+    setState({ ...state, riceBagName: selectedOption.value }); // Update riceBagName in state
+  };
+
   return (
     <div>
       <div className="">
+      <header>
+        <h1>{t['stock-report']}</h1>
+    </header>
         <div className="sale">
           <div className="form-page">
-            <div className="col-span">
-              <label>{t["rice-bag-name"]} : </label>
-              <select
-                className="select-field"
-                onChange={(e) =>
-                  setState({ ...state, riceBagName: e.target.value })
-                }
-                value={state.riceBagName || ""} // Add this line to control the select value
-              >
-                <option value="">{t["select"]}</option>
-                {bagsNames &&
-                  bagsNames.map((eachbag, index) => (
-                    <option key={index} value={eachbag.value}>
-                      {eachbag.label}
-                    </option>
-                  ))}
-              </select>
+            <div className="form-group">
+              <label className="col-md-6 label">{t["rice-bag-name"]} : </label>
+              
+
+              <Select
+                  className="select-field"
+                  onChange={handleChange}
+                  value={
+                    bagsNames &&
+                    bagsNames.find(
+                      (option) => option.value === state.riceBagName || ""
+                    )
+                  } 
+                  options={bagsNames}
+                />
             </div>
-            <div className="col-span">
-              <label>{t["date"]} : </label>
+            <div className="form-group">
+              <label className="col-md-6 label">{t["date"]} : </label>
               <input
                 type="date"
+                className="select-field"
                 value={state.data || ""}
                 onChange={(e) => setState({ ...state, date: e.target.value })}
               />

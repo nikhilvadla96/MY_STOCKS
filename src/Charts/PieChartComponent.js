@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import CanvasJSReact from '@canvasjs/react-charts';
 import apiCall from '../CustomHooks/apiCall';
 import { Method, Url } from '../Constants/ApiConstants';
+import { MyContext } from '../MyContextProvider';
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -10,12 +11,13 @@ const PieChartComponent = ({reload}) => {
   const [grandTotalAmount, setGrandTotalAmount] = useState(0);
   const [keyForReload, setKeyForReload] = useState(reload); // Key to force remount/reload
   const [isLoading, setIsLoading] = useState(reload); // Track loading state
+  const {token ,handleRedirect} = useContext(MyContext)
 
   useEffect(() => {
     const getEachRiceBagsDetails = async () => {
       setIsLoading(true); // Set loading state before fetching data
       try {
-        const response = await apiCall({ url: Url.getEachRiceBagsDetails, method: Method.GET });
+        const response = await apiCall({ url: Url.getEachRiceBagsDetails, method: Method.GET , token :token },handleRedirect);
         if (response && response.data && response.data.resultList) {
           const resultList = response.data.resultList;
           const grandTotalAmount = response.data.results.grandTotalAmount;
