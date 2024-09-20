@@ -1,6 +1,10 @@
 import React from 'react'
 
 export const Url = {
+  login:"api/auth/login",
+  verifyToken : "api/auth/verifyToken",
+  updateUsersDetails : "api/auth/updateUsersDetails",
+  getUserInfo : "api/auth/getUserInfo/",
   getAllRiceBags : 'api/ricebag/getAllRiceBags',
   saveRiceBag : 'api/ricebag/saveRiceBag',
   getRiceBagById :'api/ricebag/getRiceBagById/',

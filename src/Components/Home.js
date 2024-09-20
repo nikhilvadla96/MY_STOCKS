@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <div className='row'>
         <div className='col-md-6'>
-          <BarChart />
+          <BarChart/>
         </div>
         <div className='col-md-6'>
           <PieChartComponent reload={true} />
