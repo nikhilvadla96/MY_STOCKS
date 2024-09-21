@@ -74,7 +74,7 @@ export const Sold = () => {
     doc.setFont("helvetica", "bold");
 
     // Shop Name and Address
-    const shopName = "Your Shop Name";
+    const shopName = "Item Sale Report";
     const address = "Shop Address";
     const mobileNumber = "Mobile Number";
 
